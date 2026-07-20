@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026年9月25日至10月7日，从上海出发的长途机票价格、航程、中转和航司对比。">
+  <meta property="og:title" content="远途机票雷达">
+  <meta property="og:description" content="上海出发，21个20小时内可达的长途目的地。">
+  <meta property="og:image" content="https://herozrb.github.io/shanghai-long-haul-flight-radar/og.png">
+  <title>远途机票雷达</title>
+  <style>
+    :root{--ink:#15221d;--muted:#66736d;--paper:#f4f1e9;--surface:#fffdf7;--line:#d9ddd7;--green:#123f32;--soft:#dce9df;--coral:#e8613f;--yellow:#f3d269}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input,select{font:inherit}main{min-height:100vh}.hero{position:relative;overflow:hidden;padding:58px max(28px,calc((100vw - 1320px)/2)) 44px;color:#f8f5ec;background:var(--green)}.hero:after{content:"";position:absolute;width:430px;height:430px;right:-110px;top:-210px;border:82px solid rgba(243,210,105,.18);border-radius:50%}.eyebrow{margin-bottom:22px;color:#bdd5c8;font:500 12px/1.2 ui-monospace,monospace;letter-spacing:.18em}.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.3fr 1fr;gap:54px;align-items:end}h1{max-width:720px;margin:0;font-size:clamp(48px,7vw,86px);font-weight:500;letter-spacing:-.06em;line-height:.95}.lede{max-width:660px;margin:24px 0 0;color:#d7e2dc;font-size:18px;line-height:1.7}.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.22);border-bottom:1px solid rgba(255,255,255,.22)}.hero-facts div{padding:22px 14px;border-right:1px solid rgba(255,255,255,.16)}.hero-facts div:last-child{border-right:0}.hero-facts strong,.hero-facts span{display:block}.hero-facts strong{font-size:26px;font-weight:500}.hero-facts span{margin-top:7px;color:#bdd5c8;font-size:12px}.recommendation{position:relative;z-index:1;display:flex;justify-content:space-between;gap:24px;align-items:center;margin-top:36px;padding:18px 20px;color:var(--ink);background:var(--yellow)}.recommendation-label{display:inline-block;margin-right:16px;font:500 11px/1 ui-monospace,monospace;letter-spacing:.12em}.recommendation strong{font-size:18px;font-weight:500}.recommendation-detail{font:500 13px/1.5 ui-monospace,monospace}.content{max-width:1380px;margin:0 auto;padding:34px 28px 72px}.toolbar{display:grid;grid-template-columns:minmax(240px,1.4fr) repeat(2,minmax(150px,.6fr)) auto;gap:12px;align-items:end}.toolbar label span{display:block;margin-bottom:7px;color:var(--muted);font-size:12px}.toolbar input,.toolbar select,.toolbar button{width:100%;height:46px;padding:0 14px;color:var(--ink);border:1px solid var(--line);border-radius:0;background:var(--surface);outline:none}.toolbar input:focus,.toolbar select:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(18,63,50,.12)}.toolbar button{width:auto;min-width:168px;cursor:pointer;color:#fff;border-color:var(--green);background:var(--green)}.result-line{display:flex;justify-content:space-between;margin:22px 0 10px;color:var(--muted);font-size:12px}.table-shell{overflow-x:auto;border-top:2px solid var(--ink);background:var(--surface)}table{width:100%;min-width:1160px;border-collapse:collapse}th,td{padding:17px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}th{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.04em;background:#f0eee7}td{font-size:13px}td strong{font-size:15px;font-weight:500}.price{color:var(--coral);font:500 15px/1 ui-monospace,monospace;white-space:nowrap}.flight-code{font:400 11px/1.5 ui-monospace,monospace}.region-tag,.tag{display:inline-block;padding:4px 7px;background:var(--soft);font-size:10px;white-space:nowrap}.tag{margin-left:8px;color:#fff;background:var(--coral)}.featured-row{background:#fff8df}.empty{padding:44px;text-align:center;color:var(--muted)}.mobile-list{display:none}.unavailable{margin-top:22px;padding:18px 20px;border:1px solid var(--line);background:rgba(255,255,255,.42)}.unavailable summary{cursor:pointer;font-weight:500}.unavailable div{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.unavailable span{padding:6px 9px;color:var(--muted);background:var(--surface);font-size:12px}.notes{display:grid;grid-template-columns:140px 1fr;gap:24px;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}.notes strong{font-size:13px}.notes p{margin:0;color:var(--muted);font-size:12px;line-height:1.7}
+    @media(max-width:900px){.hero{padding-top:42px}.hero-grid{grid-template-columns:1fr;gap:30px}.recommendation{align-items:flex-start;flex-direction:column}.toolbar{grid-template-columns:1fr 1fr}.toolbar label:first-child{grid-column:1/-1}.toolbar button{width:100%}.table-shell{display:none}.mobile-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mobile-card{padding:18px;border:1px solid var(--line);background:var(--surface)}.featured-card{border-color:var(--coral);background:#fff8df}.card-heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.card-heading span{color:var(--muted);font-size:10px}.card-heading h2{margin:4px 0 0;font-size:23px;font-weight:500}.card-heading>strong{color:var(--coral);font:500 18px/1 ui-monospace,monospace}.time-grid{display:grid;grid-template-columns:1fr 1fr;margin:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.time-grid div{padding:12px 0}.time-grid span,.time-grid strong{display:block}.time-grid span{color:var(--muted);font-size:10px}.time-grid strong{margin-top:4px;font-size:14px;font-weight:500}dl{margin:0}dl div{display:grid;grid-template-columns:46px 1fr;gap:8px;margin-top:8px;font-size:11px;line-height:1.55}dt{color:var(--muted)}dd{margin:0}}
+    @media(max-width:620px){.hero{padding:34px 18px 28px}h1{font-size:50px}.lede{font-size:15px}.hero-facts{grid-template-columns:1fr 1fr}.hero-facts div:last-child{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.16)}.recommendation-detail{font-size:11px}.content{padding:24px 14px 54px}.toolbar{grid-template-columns:1fr}.toolbar label:first-child{grid-column:auto}.result-line{gap:12px;align-items:flex-start;flex-direction:column}.mobile-list{grid-template-columns:1fr}.notes{grid-template-columns:1fr;gap:8px}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">SHANGHAI · 2026 GOLDEN WEEK</div>
+      <div class="hero-grid"><div><h1>远途机票雷达</h1><p class="lede">9月25日上海出发，10月7日返回。仅保留去程和返程均不超过20小时的长途目的地。</p></div><div class="hero-facts"><div><strong id="destination-count">21</strong><span>合格目的地</span></div><div><strong id="direct-count">9</strong><span>往返直飞</span></div><div><strong>¥10,891</strong><span>最低直飞价</span></div></div></div>
+      <div class="recommendation"><div><span class="recommendation-label">当前首选</span><strong>温哥华 · 往返直飞</strong></div><div class="recommendation-detail">AC026 / AC025 · 10h25 / 12h15 · ¥10,891</div></div>
+    </section>
+    <section class="content">
+      <div class="toolbar"><label><span>搜索</span><input id="query" placeholder="目的地、航司或航班号"></label><label><span>地区</span><select id="region"><option>全部地区</option><option>欧洲</option><option>北美</option><option>非洲</option><option>大洋洲</option><option>亚洲</option></select></label><label><span>航线</span><select id="route"><option>全部航线</option><option>往返直飞</option><option>包含转机</option></select></label><button id="sort" type="button">价格从高到低 ↓</button></div>
+      <div class="result-line"><span id="result-count">显示 21 个目的地</span><span>1名成人 · 经济舱 · 往返展示价</span></div>
+      <div class="table-shell"><table><thead><tr><th>目的地</th><th>地区</th><th>往返价</th><th>去程</th><th>返程</th><th>中转</th><th>航司</th><th>航班</th></tr></thead><tbody id="table-body"></tbody></table><div class="empty" id="empty" hidden>没有符合当前筛选条件的目的地。</div></div>
+      <div class="mobile-list" id="mobile-list"></div>
+      <details class="unavailable"><summary>查看暂无20小时内合格组合的 22 个目的地</summary><div id="unavailable-list"></div></details>
+      <aside class="notes"><strong>查询口径</strong><p>价格为1名成人经济舱往返展示价。部分“直飞”可能属于同航班号经停；付款前需核对最终含税价、是否真正不经停、行李额度、联程保障及退改规则。</p></aside>
+    </section>
+  </main>
+  <script>
+    const flights=[
+      {destination:"卡萨布兰卡",region:"非洲",price:24347,outbound:"18h50",inbound:"15h05",transfer:"往返直飞*",airlines:"东航、上航",numbers:"MU8585 / FM872",nonstop:true},
+      {destination:"巴塞罗那",region:"欧洲",price:18306,outbound:"13h15",inbound:"12h35",transfer:"往返直飞",airlines:"国航",numbers:"CA839 / CA840",nonstop:true},
+      {destination:"埃里温",region:"亚洲",price:18073,outbound:"16h15",inbound:"14h35",transfer:"往返乌鲁木齐转机",airlines:"吉祥航空、南方航空",numbers:"HO1255 / CZ8164",nonstop:false},
+      {destination:"赫尔辛基",region:"欧洲",price:17893,outbound:"19h30",inbound:"19h30",transfer:"巴塞罗那 / 伦敦转机",airlines:"东航、芬兰航空",numbers:"MU249 / AY1337",nonstop:false},
+      {destination:"奥克兰",region:"大洋洲",price:17818,outbound:"11h30",inbound:"17h10",transfer:"去程直飞，返程布里斯班转机",airlines:"东航、捷星航空",numbers:"MU779 / JQ150",nonstop:false},
+      {destination:"亚的斯亚贝巴",region:"非洲",price:17167,outbound:"11h30",inbound:"10h45",transfer:"往返直飞",airlines:"埃塞俄比亚航空",numbers:"ET685 / ET684",nonstop:true},
+      {destination:"马德里",region:"欧洲",price:17122,outbound:"13h55",inbound:"17h00",transfer:"去程直飞，返程温州转机",airlines:"东航",numbers:"MU709 / MU262",nonstop:false},
+      {destination:"旧金山",region:"北美",price:14971,outbound:"11h25",inbound:"13h25",transfer:"往返直飞",airlines:"美国联合航空",numbers:"UA858 / UA857",nonstop:true},
+      {destination:"墨尔本",region:"大洋洲",price:14302,outbound:"17h05",inbound:"15h55",transfer:"往返新加坡转机",airlines:"吉祥航空、新加坡航空",numbers:"HO1601 / SQ247 / SQ228 / HO1576",nonstop:false},
+      {destination:"珀斯",region:"大洋洲",price:13874,outbound:"14h45",inbound:"18h55",transfer:"往返新加坡转机",airlines:"东航、新加坡航空",numbers:"MU543 / SQ214",nonstop:false},
+      {destination:"巴黎",region:"欧洲",price:13831,outbound:"14h20",inbound:"12h30",transfer:"往返直飞",airlines:"法国航空",numbers:"AF111 / AF116",nonstop:true},
+      {destination:"第比利斯",region:"亚洲",price:13562,outbound:"10h10",inbound:"9h00",transfer:"往返直飞",airlines:"东航",numbers:"MU285 / MU286",nonstop:true},
+      {destination:"阿姆斯特丹",region:"欧洲",price:13132,outbound:"12h00",inbound:"11h00",transfer:"往返直飞",airlines:"东航",numbers:"MU771 / MU772",nonstop:true},
+      {destination:"布达佩斯",region:"欧洲",price:13094,outbound:"18h55",inbound:"17h00",transfer:"维也纳 / 重庆转机",airlines:"国航",numbers:"CA7003 / CA436",nonstop:false},
+      {destination:"伦敦",region:"欧洲",price:12868,outbound:"14h45",inbound:"12h50",transfer:"往返直飞",airlines:"英国航空",numbers:"BA168 / BA169",nonstop:true},
+      {destination:"慕尼黑",region:"欧洲",price:12413,outbound:"18h10",inbound:"18h30",transfer:"往返伦敦转机",airlines:"英国航空",numbers:"BA168 / BA941",nonstop:false},
+      {destination:"温哥华",region:"北美",price:10891,outbound:"10h25",inbound:"12h15",transfer:"往返直飞",airlines:"加拿大航空",numbers:"AC026 / AC025",nonstop:true},
+      {destination:"约翰内斯堡",region:"非洲",price:10884,outbound:"18h50",inbound:"18h55",transfer:"往返香港转机",airlines:"国泰航空",numbers:"CX381 / CX748",nonstop:false},
+      {destination:"维也纳",region:"欧洲",price:9689,outbound:"16h40",inbound:"16h00",transfer:"往返深圳转机",airlines:"海南航空、金鹏航空",numbers:"HU6206 / HU789 / HU790 / Y87565",nonstop:false},
+      {destination:"加德满都",region:"亚洲",price:9434,outbound:"13h55",inbound:"8h35",transfer:"往返广州转机",airlines:"南方航空",numbers:"CZ3534 / CZ3068",nonstop:false},
+      {destination:"洛杉矶",region:"北美",price:8472,outbound:"18h10",inbound:"16h20",transfer:"广州 / 温哥华转机",airlines:"南方航空、加拿大航空",numbers:"CZ3526 / AC551",nonstop:false}
+    ];
+    const unavailable=["伊斯坦布尔","内罗毕","哥本哈根","圣保罗","基督城","墨西哥城","多伦多","布拉格","布里斯班","开普敦","开罗","悉尼","波士顿","纽约","罗马","芝加哥","苏黎世","西雅图","里斯本","阿德莱德","雅典","马斯喀特"];
+    const state={descending:true};
+    const price=value=>`¥${value.toLocaleString("zh-CN")}`;
+    const escapeHtml=value=>String(value).replace(/[&<>'"]/g,character=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[character]);
+    function render(){
+      const query=document.querySelector("#query").value.trim().toLowerCase();
+      const region=document.querySelector("#region").value;
+      const route=document.querySelector("#route").value;
+      const visible=flights.filter(flight=>region==="全部地区"||flight.region===region).filter(flight=>route==="全部航线"||(route==="往返直飞"?flight.nonstop:!flight.nonstop)).filter(flight=>`${flight.destination}${flight.airlines}${flight.numbers}`.toLowerCase().includes(query)).sort((first,second)=>state.descending?second.price-first.price:first.price-second.price);
+      document.querySelector("#result-count").textContent=`显示 ${visible.length} 个目的地`;
+      document.querySelector("#empty").hidden=visible.length!==0;
+      document.querySelector("#table-body").innerHTML=visible.map(flight=>`<tr class="${flight.destination==="温哥华"?"featured-row":""}"><td><strong>${escapeHtml(flight.destination)}</strong>${flight.destination==="温哥华"?'<span class="tag">首选</span>':""}</td><td><span class="region-tag">${escapeHtml(flight.region)}</span></td><td class="price">${price(flight.price)}</td><td>${escapeHtml(flight.outbound)}</td><td>${escapeHtml(flight.inbound)}</td><td>${escapeHtml(flight.transfer)}</td><td>${escapeHtml(flight.airlines)}</td><td class="flight-code">${escapeHtml(flight.numbers)}</td></tr>`).join("");
+      document.querySelector("#mobile-list").innerHTML=visible.map(flight=>`<article class="mobile-card ${flight.destination==="温哥华"?"featured-card":""}"><div class="card-heading"><div><span>${escapeHtml(flight.region)}</span><h2>${escapeHtml(flight.destination)}</h2></div><strong>${price(flight.price)}</strong></div><div class="time-grid"><div><span>去程</span><strong>${escapeHtml(flight.outbound)}</strong></div><div><span>返程</span><strong>${escapeHtml(flight.inbound)}</strong></div></div><dl><div><dt>中转</dt><dd>${escapeHtml(flight.transfer)}</dd></div><div><dt>航司</dt><dd>${escapeHtml(flight.airlines)}</dd></div><div><dt>航班</dt><dd>${escapeHtml(flight.numbers)}</dd></div></dl></article>`).join("");
+    }
+    document.querySelector("#unavailable-list").innerHTML=unavailable.map(city=>`<span>${escapeHtml(city)}</span>`).join("");
+    ["query","region","route"].forEach(id=>document.querySelector(`#${id}`).addEventListener(id==="query"?"input":"change",render));
+    document.querySelector("#sort").addEventListener("click",event=>{state.descending=!state.descending;event.currentTarget.textContent=state.descending?"价格从高到低 ↓":"价格从低到高 ↑";render()});
+    render();
+  </script>
+</body>
+</html>
