@@ -19,44 +19,22 @@
   <main>
     <section class="hero">
       <div class="eyebrow">SHANGHAI · 2026 GOLDEN WEEK · 数据更新 <span id="updated-at">2026-07-20 09:00</span></div>
-      <div class="hero-grid"><div><h1>远途机票雷达</h1><p class="lede">9月25日上海出发，10月7日返回。仅保留去程和返程均不超过20小时的长途目的地。</p></div><div class="hero-facts"><div><strong id="destination-count">21</strong><span>合格目的地</span></div><div><strong id="direct-count">9</strong><span>往返直飞</span></div><div><strong>¥10,891</strong><span>最低直飞价</span></div></div></div>
-      <div class="recommendation"><div><span class="recommendation-label">当前首选</span><strong>温哥华 · 往返直飞</strong></div><div class="recommendation-detail">AC026 / AC025 · 10h25 / 12h15 · ¥10,891</div></div>
+      <div class="hero-grid"><div><h1>远途机票雷达</h1><p class="lede">9月25日上海出发，10月7日返回。仅保留去程和返程均不超过20小时的长途目的地。</p></div><div class="hero-facts"><div><strong id="destination-count">21</strong><span>合格目的地</span></div><div><strong id="direct-count">9</strong><span>往返直飞</span></div><div><strong id="lowest-direct">¥10,891</strong><span>最低直飞价</span></div></div></div>
+      <div class="recommendation"><div><span class="recommendation-label">当前首选</span><strong id="recommendation-title">温哥华 · 往返直飞</strong></div><div class="recommendation-detail" id="recommendation-detail">AC026 / AC025 · 10h25 / 12h15 · ¥10,891</div></div>
     </section>
     <section class="content">
-      <div class="toolbar"><label><span>搜索</span><input id="query" placeholder="目的地、航司或航班号"></label><label><span>地区</span><select id="region"><option>全部地区</option><option>欧洲</option><option>北美</option><option>非洲</option><option>大洋洲</option><option>亚洲</option></select></label><label><span>航线</span><select id="route"><option>全部航线</option><option>往返直飞</option><option>包含转机</option></select></label><button id="sort" type="button">价格从高到低 ↓</button></div>
+      <div class="toolbar"><label><span>搜索</span><input id="query" placeholder="目的地、航司或航班号"></label><label><span>地区</span><select id="region"><option>全部地区</option><option>欧洲</option><option>北美</option><option>南美</option><option>非洲</option><option>大洋洲</option><option>亚洲</option></select></label><label><span>航线</span><select id="route"><option>全部航线</option><option>往返直飞</option><option>包含转机</option></select></label><button id="sort" type="button">价格从高到低 ↓</button></div>
       <div class="result-line"><span id="result-count">显示 21 个目的地</span><span>1名成人 · 经济舱 · 往返展示价</span></div>
       <div class="table-shell"><table><thead><tr><th>目的地</th><th>地区</th><th>往返价</th><th>较上次</th><th>去程</th><th>返程</th><th>中转</th><th>航司</th><th>航班</th></tr></thead><tbody id="table-body"></tbody></table><div class="empty" id="empty" hidden>没有符合当前筛选条件的目的地。</div></div>
       <div class="mobile-list" id="mobile-list"></div>
-      <details class="unavailable"><summary>查看暂无20小时内合格组合的 22 个目的地</summary><div id="unavailable-list"></div></details>
+      <details class="unavailable"><summary id="unavailable-summary">查看暂无20小时内合格组合的 22 个目的地</summary><div id="unavailable-list"></div></details>
       <aside class="notes"><strong>查询口径</strong><p>价格为1名成人经济舱往返展示价。部分“直飞”可能属于同航班号经停；付款前需核对最终含税价、是否真正不经停、行李额度、联程保障及退改规则。</p></aside>
     </section>
   </main>
   <script>
-    const flights=[
-      {destination:"卡萨布兰卡",region:"非洲",price:24347,outbound:"18h50",inbound:"15h05",transfer:"往返直飞*",airlines:"东航、上航",numbers:"MU8585 / FM872",nonstop:true},
-      {destination:"巴塞罗那",region:"欧洲",price:18306,outbound:"13h15",inbound:"12h35",transfer:"往返直飞",airlines:"国航",numbers:"CA839 / CA840",nonstop:true},
-      {destination:"埃里温",region:"亚洲",price:18073,outbound:"16h15",inbound:"14h35",transfer:"往返乌鲁木齐转机",airlines:"吉祥航空、南方航空",numbers:"HO1255 / CZ8164",nonstop:false},
-      {destination:"赫尔辛基",region:"欧洲",price:17893,outbound:"19h30",inbound:"19h30",transfer:"巴塞罗那 / 伦敦转机",airlines:"东航、芬兰航空",numbers:"MU249 / AY1337",nonstop:false},
-      {destination:"奥克兰",region:"大洋洲",price:17818,outbound:"11h30",inbound:"17h10",transfer:"去程直飞，返程布里斯班转机",airlines:"东航、捷星航空",numbers:"MU779 / JQ150",nonstop:false},
-      {destination:"亚的斯亚贝巴",region:"非洲",price:17167,outbound:"11h30",inbound:"10h45",transfer:"往返直飞",airlines:"埃塞俄比亚航空",numbers:"ET685 / ET684",nonstop:true},
-      {destination:"马德里",region:"欧洲",price:17122,outbound:"13h55",inbound:"17h00",transfer:"去程直飞，返程温州转机",airlines:"东航",numbers:"MU709 / MU262",nonstop:false},
-      {destination:"旧金山",region:"北美",price:14971,outbound:"11h25",inbound:"13h25",transfer:"往返直飞",airlines:"美国联合航空",numbers:"UA858 / UA857",nonstop:true},
-      {destination:"墨尔本",region:"大洋洲",price:14302,outbound:"17h05",inbound:"15h55",transfer:"往返新加坡转机",airlines:"吉祥航空、新加坡航空",numbers:"HO1601 / SQ247 / SQ228 / HO1576",nonstop:false},
-      {destination:"珀斯",region:"大洋洲",price:13874,outbound:"14h45",inbound:"18h55",transfer:"往返新加坡转机",airlines:"东航、新加坡航空",numbers:"MU543 / SQ214",nonstop:false},
-      {destination:"巴黎",region:"欧洲",price:13831,outbound:"14h20",inbound:"12h30",transfer:"往返直飞",airlines:"法国航空",numbers:"AF111 / AF116",nonstop:true},
-      {destination:"第比利斯",region:"亚洲",price:13562,outbound:"10h10",inbound:"9h00",transfer:"往返直飞",airlines:"东航",numbers:"MU285 / MU286",nonstop:true},
-      {destination:"阿姆斯特丹",region:"欧洲",price:13132,outbound:"12h00",inbound:"11h00",transfer:"往返直飞",airlines:"东航",numbers:"MU771 / MU772",nonstop:true},
-      {destination:"布达佩斯",region:"欧洲",price:13094,outbound:"18h55",inbound:"17h00",transfer:"维也纳 / 重庆转机",airlines:"国航",numbers:"CA7003 / CA436",nonstop:false},
-      {destination:"伦敦",region:"欧洲",price:12868,outbound:"14h45",inbound:"12h50",transfer:"往返直飞",airlines:"英国航空",numbers:"BA168 / BA169",nonstop:true},
-      {destination:"慕尼黑",region:"欧洲",price:12413,outbound:"18h10",inbound:"18h30",transfer:"往返伦敦转机",airlines:"英国航空",numbers:"BA168 / BA941",nonstop:false},
-      {destination:"温哥华",region:"北美",price:10891,outbound:"10h25",inbound:"12h15",transfer:"往返直飞",airlines:"加拿大航空",numbers:"AC026 / AC025",nonstop:true},
-      {destination:"约翰内斯堡",region:"非洲",price:10884,outbound:"18h50",inbound:"18h55",transfer:"往返香港转机",airlines:"国泰航空",numbers:"CX381 / CX748",nonstop:false},
-      {destination:"维也纳",region:"欧洲",price:9689,outbound:"16h40",inbound:"16h00",transfer:"往返深圳转机",airlines:"海南航空、金鹏航空",numbers:"HU6206 / HU789 / HU790 / Y87565",nonstop:false},
-      {destination:"加德满都",region:"亚洲",price:9434,outbound:"13h55",inbound:"8h35",transfer:"往返广州转机",airlines:"南方航空",numbers:"CZ3534 / CZ3068",nonstop:false},
-      {destination:"洛杉矶",region:"北美",price:8472,outbound:"18h10",inbound:"16h20",transfer:"广州 / 温哥华转机",airlines:"南方航空、加拿大航空",numbers:"CZ3526 / AC551",nonstop:false}
-    ];
-    const unavailable=["伊斯坦布尔","内罗毕","哥本哈根","圣保罗","基督城","墨西哥城","多伦多","布拉格","布里斯班","开普敦","开罗","悉尼","波士顿","纽约","罗马","芝加哥","苏黎世","西雅图","里斯本","阿德莱德","雅典","马斯喀特"];
-    const updatedAt="2026-07-20 09:00";
+    const flights=[{"destination":"卡萨布兰卡","region":"非洲","price":24347,"outbound":"18h50","inbound":"15h05","transfer":"往返直飞","airlines":"上航","numbers":"FM871 / FM872","nonstop":true,"previousPrice":24347},{"destination":"巴塞罗那","region":"欧洲","price":19192,"outbound":"13h15","inbound":"12h30","transfer":"往返直飞","airlines":"东航","numbers":"MU249 / MU250","nonstop":true,"previousPrice":18306},{"destination":"亚的斯亚贝巴","region":"非洲","price":17167,"outbound":"11h30","inbound":"10h45","transfer":"往返直飞","airlines":"埃塞俄比亚航空","numbers":"ET685 / ET684","nonstop":true,"previousPrice":17167},{"destination":"马德里","region":"欧洲","price":17122,"outbound":"13h55","inbound":"17h00","transfer":"去程直飞，返程温州转机","airlines":"东航","numbers":"MU709 / MU262 / FM9524","nonstop":false,"previousPrice":17122},{"destination":"阿姆斯特丹","region":"欧洲","price":16877,"outbound":"17h50","inbound":"11h00","transfer":"去程伊斯坦布尔转机，返程直飞","airlines":"东航","numbers":"MU703 / TK1957 / MU772","nonstop":false,"previousPrice":13132},{"destination":"慕尼黑","region":"欧洲","price":14824,"outbound":"13h10","inbound":"11h30","transfer":"往返直飞","airlines":"汉莎航空","numbers":"LH727 / LH726","nonstop":true,"previousPrice":12413},{"destination":"巴黎","region":"欧洲","price":14199,"outbound":"12h15","inbound":"14h10","transfer":"去程直飞，返程NKG转机","airlines":"东航","numbers":"MU569 / MU846 / MU2699","nonstop":false,"previousPrice":13831},{"destination":"第比利斯","region":"亚洲","price":13562,"outbound":"10h10","inbound":"9h00","transfer":"往返直飞","airlines":"东航","numbers":"MU285 / MU286","nonstop":true,"previousPrice":13562},{"destination":"布达佩斯","region":"欧洲","price":12960,"outbound":"14h30","inbound":"16h30","transfer":"去程北京转机，返程重庆转机","airlines":"国航","numbers":"CA1566 / CA719 / CA436 / CA4543","nonstop":false,"previousPrice":13094},{"destination":"赫尔辛基","region":"欧洲","price":12261,"outbound":"18h10","inbound":"19h20","transfer":"去程AMS转机，返程巴黎转机","airlines":"法国航空","numbers":"AF8448 / AF3199 / AF1071 / AF116","nonstop":false,"previousPrice":17893},{"destination":"维也纳","region":"欧洲","price":10963,"outbound":"15h55","inbound":"13h55","transfer":"去程MUC转机，返程MUC转机","airlines":"汉莎航空","numbers":"LH727 / LH6322 / LH6325 / LH726","nonstop":false,"previousPrice":9689},{"destination":"温哥华","region":"北美","price":10891,"outbound":"10h25","inbound":"12h15","transfer":"往返直飞","airlines":"加拿大航空","numbers":"AC026 / AC025","nonstop":true,"previousPrice":10891},{"destination":"伦敦","region":"欧洲","price":9842,"outbound":"12h30","inbound":"11h30","transfer":"往返直飞","airlines":"东航","numbers":"MU7363 / MU7364","nonstop":true,"previousPrice":12868},{"destination":"旧金山","region":"北美","price":7667,"outbound":"18h35","inbound":"19h45","transfer":"去程香港转机，返程香港转机","airlines":"国泰航空","numbers":"CX381 / CX872 / CX873 / CX316","nonstop":false,"previousPrice":14971},{"destination":"加德满都","region":"亚洲","price":6257,"outbound":"15h40","inbound":"15h10","transfer":"去程广州转机，返程香港转机","airlines":"南航、国泰航空","numbers":"CZ8212 / CZ6067 / CX640 / CX360","nonstop":false,"previousPrice":9434}];
+    const unavailable=["埃里温","奥克兰","墨尔本","珀斯","约翰内斯堡","洛杉矶","伊斯坦布尔","内罗毕","哥本哈根","圣保罗","基督城","墨西哥城","多伦多","布拉格","布里斯班","开普敦","开罗","悉尼","波士顿","纽约","罗马","芝加哥","苏黎世","西雅图","里斯本","阿德莱德","雅典","马斯喀特"];
+    const updatedAt="2026-07-20 17:20";
     const state={descending:true};
     const price=value=>`¥${value.toLocaleString("zh-CN")}`;
     const changeMarkup=flight=>{if(typeof flight.previousPrice!=="number")return '<span class="change change-flat">—</span>';const difference=flight.price-flight.previousPrice;if(difference===0)return '<span class="change change-flat">持平</span>';return `<span class="change ${difference>0?"change-up":"change-down"}">${difference>0?"↑":"↓"} ¥${Math.abs(difference).toLocaleString("zh-CN")}</span>`};
@@ -71,7 +49,14 @@
       document.querySelector("#table-body").innerHTML=visible.map(flight=>`<tr class="${flight.destination==="温哥华"?"featured-row":""}"><td><strong>${escapeHtml(flight.destination)}</strong>${flight.destination==="温哥华"?'<span class="tag">首选</span>':""}</td><td><span class="region-tag">${escapeHtml(flight.region)}</span></td><td class="price">${price(flight.price)}</td><td>${changeMarkup(flight)}</td><td>${escapeHtml(flight.outbound)}</td><td>${escapeHtml(flight.inbound)}</td><td>${escapeHtml(flight.transfer)}</td><td>${escapeHtml(flight.airlines)}</td><td class="flight-code">${escapeHtml(flight.numbers)}</td></tr>`).join("");
       document.querySelector("#mobile-list").innerHTML=visible.map(flight=>`<article class="mobile-card ${flight.destination==="温哥华"?"featured-card":""}"><div class="card-heading"><div><span>${escapeHtml(flight.region)}</span><h2>${escapeHtml(flight.destination)}</h2></div><div><strong>${price(flight.price)}</strong><br>${changeMarkup(flight)}</div></div><div class="time-grid"><div><span>去程</span><strong>${escapeHtml(flight.outbound)}</strong></div><div><span>返程</span><strong>${escapeHtml(flight.inbound)}</strong></div></div><dl><div><dt>中转</dt><dd>${escapeHtml(flight.transfer)}</dd></div><div><dt>航司</dt><dd>${escapeHtml(flight.airlines)}</dd></div><div><dt>航班</dt><dd>${escapeHtml(flight.numbers)}</dd></div></dl></article>`).join("");
     }
+    const directFlights=flights.filter(flight=>flight.nonstop).sort((first,second)=>first.price-second.price);
+    const preferred=directFlights[0]||[...flights].sort((first,second)=>first.price-second.price)[0];
     document.querySelector("#updated-at").textContent=updatedAt;
+    document.querySelector("#destination-count").textContent=String(flights.length);
+    document.querySelector("#direct-count").textContent=String(directFlights.length);
+    document.querySelector("#lowest-direct").textContent=directFlights.length?price(directFlights[0].price):"—";
+    if(preferred){document.querySelector("#recommendation-title").textContent=`${preferred.destination} · ${preferred.nonstop?"往返直飞":"20小时内"}`;document.querySelector("#recommendation-detail").textContent=`${preferred.numbers} · ${preferred.outbound} / ${preferred.inbound} · ${price(preferred.price)}`}
+    document.querySelector("#unavailable-summary").textContent=`查看暂无20小时内合格组合的 ${unavailable.length} 个目的地`;
     document.querySelector("#unavailable-list").innerHTML=unavailable.map(city=>`<span>${escapeHtml(city)}</span>`).join("");
     ["query","region","route"].forEach(id=>document.querySelector(`#${id}`).addEventListener(id==="query"?"input":"change",render));
     document.querySelector("#sort").addEventListener("click",event=>{state.descending=!state.descending;event.currentTarget.textContent=state.descending?"价格从高到低 ↓":"价格从低到高 ↑";render()});
