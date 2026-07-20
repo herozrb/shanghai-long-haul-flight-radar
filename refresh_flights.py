@@ -409,7 +409,9 @@ def main() -> int:
                 report["queryError"] += 1
             report["preserved"].append(destination)
             if previous:
-                updated_flights.append(previous)
+                preserved = dict(previous)
+                preserved["stale"] = True
+                updated_flights.append(preserved)
             else:
                 updated_unavailable.append(destination)
             continue
