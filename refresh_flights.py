@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 import subprocess
 import sys
@@ -174,8 +175,22 @@ def query_destination(destination: str, run_dir: Path) -> dict:
             if process.returncode == 0:
                 try:
                     result["records"] = parse_json_output(process.stdout)
-                    result["status"] = "success"
-                    break
+                    source_errors = [
+                        marker
+                        for marker in (
+                            "Fliggy MCP query failed",
+                            "Skiplagged returned HTTP",
+                            "Google Flights query failed",
+                            "Google Flights search failed",
+                        )
+                        if marker in process.stderr
+                    ]
+                    if not result["records"] and source_errors:
+                        result["status"] = "source_error"
+                        result["error"] = "No records with upstream errors: " + ", ".join(source_errors)
+                    else:
+                        result["status"] = "success"
+                        break
                 except (json.JSONDecodeError, ValueError) as error:
                     result["status"] = "parse_error"
                     result["error"] = str(error)
@@ -195,7 +210,7 @@ def query_destination(destination: str, run_dir: Path) -> dict:
             time.sleep(3)
     if last_result is None:
         raise RuntimeError("Query did not produce a result")
-    safe_name = re.sub(r"[^A-Za-z0-9_-]+", "_", destination)
+    safe_name = hashlib.sha1(destination.encode("utf-8")).hexdigest()[:12]
     (run_dir / f"{safe_name}.json").write_text(
         json.dumps(last_result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
@@ -371,6 +386,7 @@ def main() -> int:
     report = {
         "updatedAt": run_time.strftime("%Y-%m-%d %H:%M"),
         "success": 0,
+        "sourceError": 0,
         "queryError": 0,
         "parseError": 0,
         "noResult": 0,
@@ -387,6 +403,8 @@ def main() -> int:
         if status != "success":
             if status == "parse_error":
                 report["parseError"] += 1
+            elif status == "source_error":
+                report["sourceError"] += 1
             else:
                 report["queryError"] += 1
             report["preserved"].append(destination)
