@@ -29,6 +29,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 24350,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 24350,
+      "stale": false
     }
   ],
   "巴塞罗那": [
@@ -60,6 +65,11 @@
     {
       "updatedAt": "2026-07-21 11:02",
       "price": 19193,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 18440,
       "stale": false
     }
   ],
@@ -95,6 +105,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 15161,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 15161,
+      "stale": false
     }
   ],
   "奥克兰": [
@@ -127,6 +142,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 16640,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 16990,
+      "stale": false
     }
   ],
   "亚的斯亚贝巴": [
@@ -152,6 +172,11 @@
     },
     {
       "updatedAt": "2026-07-21 11:02",
+      "price": 15592,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
       "price": 15592,
       "stale": false
     }
@@ -186,6 +211,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 17724,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 17724,
+      "stale": false
     }
   ],
   "旧金山": [
@@ -217,6 +247,11 @@
     {
       "updatedAt": "2026-07-21 11:02",
       "price": 12991,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 10459,
       "stale": false
     }
   ],
@@ -274,6 +309,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 13449,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 13449,
+      "stale": false
     }
   ],
   "第比利斯": [
@@ -295,6 +335,11 @@
     {
       "updatedAt": "2026-07-21 09:57",
       "price": 12957,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 6525,
       "stale": false
     }
   ],
@@ -328,6 +373,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 13133,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 13133,
+      "stale": false
     }
   ],
   "布达佩斯": [
@@ -358,6 +408,11 @@
     },
     {
       "updatedAt": "2026-07-21 11:02",
+      "price": 12960,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
       "price": 12960,
       "stale": false
     }
@@ -399,6 +454,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 12080,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 12629,
+      "stale": false
     }
   ],
   "温哥华": [
@@ -430,6 +490,11 @@
     {
       "updatedAt": "2026-07-21 11:02",
       "price": 10887,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 10886,
       "stale": false
     }
   ],
@@ -470,6 +535,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 14382,
       "stale": true
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 14382,
+      "stale": true
     }
   ],
   "加德满都": [
@@ -502,6 +572,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 7285,
       "stale": true
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 7285,
+      "stale": true
     }
   ],
   "洛杉矶": [
@@ -532,6 +607,11 @@
     },
     {
       "updatedAt": "2026-07-21 11:02",
+      "price": 8472,
+      "stale": true
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
       "price": 8472,
       "stale": true
     }
@@ -583,6 +663,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 13260,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 13959,
+      "stale": false
     }
   ],
   "多伦多": [
@@ -595,6 +680,11 @@
       "updatedAt": "2026-07-20 18:12",
       "price": 11425,
       "stale": true
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 11414,
+      "stale": false
     }
   ],
   "西雅图": [
@@ -620,6 +710,11 @@
     },
     {
       "updatedAt": "2026-07-21 11:02",
+      "price": 9861,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
       "price": 9861,
       "stale": false
     }
@@ -651,6 +746,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 12241,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 12241,
+      "stale": false
     }
   ],
   "罗马": [
@@ -668,6 +768,11 @@
       "updatedAt": "2026-07-21 11:02",
       "price": 13332,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 16263,
+      "stale": false
     }
   ],
   "伊斯坦布尔": [
@@ -683,6 +788,11 @@
     },
     {
       "updatedAt": "2026-07-21 11:02",
+      "price": 13137,
+      "stale": true
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
       "price": 13137,
       "stale": true
     }
@@ -720,6 +830,25 @@
     {
       "updatedAt": "2026-07-21 11:02",
       "price": 18797,
+      "stale": false
+    },
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 5781,
+      "stale": false
+    }
+  ],
+  "哥本哈根": [
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 13859,
+      "stale": false
+    }
+  ],
+  "布拉格": [
+    {
+      "updatedAt": "2026-07-21 12:15",
+      "price": 13365,
       "stale": false
     }
   ]
