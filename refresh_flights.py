@@ -20,7 +20,9 @@ TRACKING_ROOT = ROOT / ".tracking"
 FLYCLAW_PATH = Path("/Users/zhourongbing/.agents/skills/flyclaw/flyclaw.py")
 DEPARTURE_DATE = "2026-09-25"
 RETURN_DATE = "2026-10-07"
-MAX_DURATION_MINUTES = 20 * 60
+MAX_DURATION_MINUTES = 17 * 60
+MAX_STOPS_PER_DIRECTION = 1
+CRITERIA_VERSION = "17h-one-stop-price-first"
 MAX_WORKERS = 2
 QUERY_TIMEOUT_SECONDS = 35
 
@@ -160,6 +162,7 @@ def append_price_history(
             "updatedAt": updated_at,
             "price": int(flight["price"]),
             "stale": bool(flight.get("stale")),
+            "criteriaVersion": flight.get("criteriaVersion", CRITERIA_VERSION),
         }
         points = [
             existing
@@ -202,7 +205,7 @@ def query_destination(destination: str, run_dir: Path) -> dict:
         "--cabin",
         "economy",
         "--stops",
-        "any",
+        str(MAX_STOPS_PER_DIRECTION),
         "--sort",
         "cheapest",
         "--currency",
@@ -279,11 +282,9 @@ def itinerary_key(record: dict) -> tuple:
     outbound_duration = record.get("duration_minutes")
     inbound_duration = record.get("return_duration_minutes")
     price = record.get("price")
-    both_direct = outbound_stops == 0 and inbound_stops == 0
     return (
-        0 if both_direct else 1,
-        int(outbound_stops) + int(inbound_stops),
         float(price),
+        int(outbound_stops) + int(inbound_stops),
         int(outbound_duration) + int(inbound_duration),
     )
 
@@ -310,6 +311,10 @@ def qualifying_records(records: list[dict]) -> list[dict]:
             continue
         if int(record["return_duration_minutes"]) > MAX_DURATION_MINUTES:
             continue
+        if int(record["stops"]) > MAX_STOPS_PER_DIRECTION:
+            continue
+        if int(record["return_stops"]) > MAX_STOPS_PER_DIRECTION:
+            continue
         qualified.append(record)
     if len(qualified) >= 3:
         median_price = median(float(record["price"]) for record in qualified)
@@ -320,6 +325,40 @@ def qualifying_records(records: list[dict]) -> list[dict]:
 def format_duration(minutes: int) -> str:
     hours, remainder = divmod(int(minutes), 60)
     return f"{hours}h{remainder:02d}"
+
+
+def parse_duration(value: str) -> int | None:
+    match = re.fullmatch(r"(\d+)h(\d{2})", str(value))
+    if not match:
+        return None
+    return int(match.group(1)) * 60 + int(match.group(2))
+
+
+def stored_flight_qualifies(flight: dict) -> bool:
+    outbound_minutes = flight.get("outboundMinutes")
+    inbound_minutes = flight.get("inboundMinutes")
+    if outbound_minutes is None:
+        outbound_minutes = parse_duration(flight.get("outbound", ""))
+    if inbound_minutes is None:
+        inbound_minutes = parse_duration(flight.get("inbound", ""))
+    if outbound_minutes is None or inbound_minutes is None:
+        return False
+
+    outbound_stops = flight.get("outboundStops")
+    inbound_stops = flight.get("inboundStops")
+    if outbound_stops is None or inbound_stops is None:
+        if flight.get("nonstop"):
+            outbound_stops = 0
+            inbound_stops = 0
+        else:
+            return False
+
+    return (
+        int(outbound_minutes) <= MAX_DURATION_MINUTES
+        and int(inbound_minutes) <= MAX_DURATION_MINUTES
+        and int(outbound_stops) <= MAX_STOPS_PER_DIRECTION
+        and int(inbound_stops) <= MAX_STOPS_PER_DIRECTION
+    )
 
 
 def unique(values: list[str]) -> list[str]:
@@ -368,6 +407,11 @@ def build_flight(destination: str, record: dict, previous_price: int | None) -> 
         "airlines": "、".join(airlines),
         "numbers": flight_numbers(record),
         "nonstop": int(record["stops"]) == 0 and int(record["return_stops"]) == 0,
+        "outboundMinutes": int(record["duration_minutes"]),
+        "inboundMinutes": int(record["return_duration_minutes"]),
+        "outboundStops": int(record["stops"]),
+        "inboundStops": int(record["return_stops"]),
+        "criteriaVersion": CRITERIA_VERSION,
     }
     if previous_price is not None:
         flight["previousPrice"] = previous_price
@@ -475,6 +519,12 @@ def main() -> int:
         "newlyQualified": [],
         "newlyUnavailable": [],
         "preserved": [],
+        "invalidatedByCriteria": [],
+        "criteria": {
+            "maxDurationMinutesPerDirection": MAX_DURATION_MINUTES,
+            "maxStopsPerDirection": MAX_STOPS_PER_DIRECTION,
+            "ranking": "price_first",
+        },
     }
 
     for destination in DESTINATIONS:
@@ -488,13 +538,15 @@ def main() -> int:
                 report["sourceError"] += 1
             else:
                 report["queryError"] += 1
-            report["preserved"].append(destination)
-            if previous:
+            if previous and stored_flight_qualifies(previous):
                 preserved = dict(previous)
                 preserved["stale"] = True
                 updated_flights.append(preserved)
             else:
                 updated_unavailable.append(destination)
+                if previous:
+                    report["invalidatedByCriteria"].append(destination)
+            report["preserved"].append(destination)
             continue
 
         report["success"] += 1
@@ -508,6 +560,8 @@ def main() -> int:
 
         previous_price = int(previous["price"]) if previous else None
         flight = build_flight(destination, qualified[0], previous_price)
+        if previous and previous.get("criteriaVersion") != CRITERIA_VERSION:
+            flight["criteriaChanged"] = True
         updated_flights.append(flight)
         if previous_price is None:
             report["newlyQualified"].append(destination)
@@ -544,9 +598,7 @@ def main() -> int:
     report["qualified"] = len(updated_flights)
     report["unavailable"] = len(updated_unavailable)
     report["currentPreferred"] = min(
-        (flight for flight in updated_flights if flight["nonstop"]),
-        key=lambda flight: flight["price"],
-        default=min(updated_flights, key=lambda flight: flight["price"], default=None),
+        updated_flights, key=lambda flight: flight["price"], default=None
     )
     (run_dir / "summary.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
