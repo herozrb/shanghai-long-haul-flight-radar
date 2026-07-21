@@ -24,6 +24,7 @@ MAX_WORKERS = 2
 QUERY_TIMEOUT_SECONDS = 35
 
 DESTINATIONS = {
+    "雷克雅未克（冰岛）": "欧洲",
     "卡萨布兰卡": "非洲",
     "巴塞罗那": "欧洲",
     "埃里温": "亚洲",
@@ -67,6 +68,16 @@ DESTINATIONS = {
     "阿德莱德": "大洋洲",
     "雅典": "欧洲",
     "马斯喀特": "亚洲",
+    "德班（南非）": "非洲",
+    "毛里求斯": "非洲",
+    "马累（马尔代夫）": "亚洲",
+}
+
+DESTINATION_QUERIES = {
+    "雷克雅未克（冰岛）": "Reykjavik",
+    "德班（南非）": "Durban",
+    "毛里求斯": "MRU",
+    "马累（马尔代夫）": "马累",
 }
 
 AIRPORT_NAMES = {
@@ -130,6 +141,7 @@ def parse_json_output(output: str) -> list[dict]:
 
 
 def query_destination(destination: str, run_dir: Path) -> dict:
+    query = DESTINATION_QUERIES.get(destination, destination)
     command = [
         sys.executable,
         str(FLYCLAW_PATH),
@@ -137,7 +149,7 @@ def query_destination(destination: str, run_dir: Path) -> dict:
         "--from",
         "上海",
         "--to",
-        destination,
+        query,
         "--date",
         DEPARTURE_DATE,
         "--return",
