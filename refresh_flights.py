@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent
 PAGE_PATH = ROOT / "index.html"
+HISTORY_PATH = ROOT / "price_history.json"
 TRACKING_ROOT = ROOT / ".tracking"
 FLYCLAW_PATH = Path("/Users/zhourongbing/.agents/skills/flyclaw/flyclaw.py")
 DEPARTURE_DATE = "2026-09-25"
@@ -127,6 +128,48 @@ def read_current_data(page_text: str) -> tuple[list[dict], list[str]]:
         raise RuntimeError(process.stderr.strip() or "Unable to parse current flight data")
     data = json.loads(process.stdout)
     return data["flights"], data["unavailable"]
+
+
+def read_updated_at(page_text: str) -> str:
+    match = re.search(r'const updatedAt="([^"]+)";', page_text)
+    if not match:
+        raise RuntimeError("Unable to locate update time")
+    return match.group(1)
+
+
+def load_price_history() -> dict[str, list[dict]]:
+    if not HISTORY_PATH.exists():
+        return {}
+    data = json.loads(HISTORY_PATH.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise RuntimeError("Price history must be a JSON object")
+    return data
+
+
+def append_price_history(
+    history: dict[str, list[dict]], flights: list[dict], updated_at: str
+) -> dict[str, list[dict]]:
+    updated_history = {
+        destination: list(points)
+        for destination, points in history.items()
+        if isinstance(points, list)
+    }
+    for flight in flights:
+        destination = flight["destination"]
+        point = {
+            "updatedAt": updated_at,
+            "price": int(flight["price"]),
+            "stale": bool(flight.get("stale")),
+        }
+        points = [
+            existing
+            for existing in updated_history.get(destination, [])
+            if existing.get("updatedAt") != updated_at
+        ]
+        points.append(point)
+        points.sort(key=lambda item: item["updatedAt"])
+        updated_history[destination] = points[-365:]
+    return updated_history
 
 
 def parse_json_output(output: str) -> list[dict]:
@@ -349,7 +392,13 @@ def validate_page(page_text: str) -> None:
         raise RuntimeError("Tracking display is missing")
 
 
-def update_page(page_text: str, flights: list[dict], unavailable: list[str], updated_at: str) -> str:
+def update_page(
+    page_text: str,
+    flights: list[dict],
+    unavailable: list[str],
+    updated_at: str,
+    price_history: dict[str, list[dict]] | None = None,
+) -> str:
     data_block = (
         "const flights="
         + json.dumps(flights, ensure_ascii=False, separators=(",", ":"))
@@ -370,6 +419,19 @@ def update_page(page_text: str, flights: list[dict], unavailable: list[str], upd
         updated,
         count=1,
     )
+    if price_history is not None:
+        history_json = json.dumps(
+            price_history, ensure_ascii=False, separators=(",", ":")
+        )
+        updated, replacement_count = re.subn(
+            r'(<script id="price-history-data" type="application/json">).*?(</script>)',
+            lambda match: match.group(1) + history_json + match.group(2),
+            updated,
+            count=1,
+            flags=re.S,
+        )
+        if replacement_count != 1:
+            raise RuntimeError("Unable to locate price history data")
     validate_page(updated)
     return updated
 
@@ -463,8 +525,21 @@ def main() -> int:
 
     updated_flights.sort(key=lambda flight: flight["price"], reverse=True)
     updated_unavailable = [destination for destination in DESTINATIONS if destination in updated_unavailable]
-    updated_page = update_page(page_text, updated_flights, updated_unavailable, report["updatedAt"])
+    price_history = append_price_history(
+        load_price_history(), updated_flights, report["updatedAt"]
+    )
+    updated_page = update_page(
+        page_text,
+        updated_flights,
+        updated_unavailable,
+        report["updatedAt"],
+        price_history,
+    )
     PAGE_PATH.write_text(updated_page, encoding="utf-8")
+    HISTORY_PATH.write_text(
+        json.dumps(price_history, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     report["qualified"] = len(updated_flights)
     report["unavailable"] = len(updated_unavailable)
