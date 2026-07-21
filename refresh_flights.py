@@ -9,6 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
+from statistics import median
 from zoneinfo import ZoneInfo
 
 
@@ -247,11 +248,17 @@ def qualifying_records(records: list[dict]) -> list[dict]:
             continue
         if str(record["currency"]).upper() != "CNY" or float(record["price"]) <= 0:
             continue
+        cabin_class = str(record.get("cabin_class") or "").lower()
+        if cabin_class and cabin_class not in {"经济舱", "economy"}:
+            continue
         if int(record["duration_minutes"]) > MAX_DURATION_MINUTES:
             continue
         if int(record["return_duration_minutes"]) > MAX_DURATION_MINUTES:
             continue
         qualified.append(record)
+    if len(qualified) >= 3:
+        median_price = median(float(record["price"]) for record in qualified)
+        qualified = [record for record in qualified if float(record["price"]) <= median_price * 3]
     return sorted(qualified, key=itinerary_key)
 
 
