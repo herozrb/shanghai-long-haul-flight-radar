@@ -71,6 +71,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 18440,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 19191,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "埃里温": [
@@ -81,6 +87,12 @@
     },
     {
       "updatedAt": "2026-07-22 14:12",
+      "price": 18066,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
       "price": 18066,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
@@ -165,6 +177,12 @@
       "price": 16988,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 16988,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "亚的斯亚贝巴": [
@@ -200,6 +218,12 @@
     },
     {
       "updatedAt": "2026-07-21 16:32",
+      "price": 17709,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
       "price": 17709,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
@@ -295,6 +319,12 @@
       "price": 15573,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 15409,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "墨尔本": [
@@ -368,6 +398,12 @@
       "price": 12791,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 14198,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "第比利斯": [
@@ -435,6 +471,12 @@
     },
     {
       "updatedAt": "2026-07-22 14:12",
+      "price": 13311,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
       "price": 13311,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
@@ -507,6 +549,12 @@
     },
     {
       "updatedAt": "2026-07-22 14:12",
+      "price": 9838,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
       "price": 9838,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
@@ -590,6 +638,12 @@
     {
       "updatedAt": "2026-07-22 14:12",
       "price": 11773,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 23941,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -776,6 +830,12 @@
       "price": 13219,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 13219,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "多伦多": [
@@ -837,6 +897,12 @@
       "price": 6467,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 6520,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "开罗": [
@@ -849,6 +915,12 @@
       "updatedAt": "2026-07-21 09:57",
       "price": 19728,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 15202,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "里斯本": [
@@ -897,6 +969,12 @@
     {
       "updatedAt": "2026-07-22 14:12",
       "price": 17040,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 20749,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -976,6 +1054,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 13365,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-22 17:30",
+      "price": 13950,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ]
 }
