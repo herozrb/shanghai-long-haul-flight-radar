@@ -183,6 +183,12 @@
       "price": 16988,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 16988,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "亚的斯亚贝巴": [
@@ -404,6 +410,12 @@
       "price": 14198,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 14196,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "第比利斯": [
@@ -431,6 +443,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 6525,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 14812,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "阿姆斯特丹": [
@@ -529,6 +547,12 @@
       "price": 11913,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 12959,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "伦敦": [
@@ -556,6 +580,12 @@
     {
       "updatedAt": "2026-07-22 17:30",
       "price": 9838,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 11004,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -690,6 +720,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 14382,
       "stale": true
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 10959,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "加德满都": [
@@ -903,6 +939,12 @@
       "price": 6520,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 6467,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "开罗": [
@@ -975,6 +1017,12 @@
     {
       "updatedAt": "2026-07-22 17:30",
       "price": 20749,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-23 09:51",
+      "price": 14985,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
