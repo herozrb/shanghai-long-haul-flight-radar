@@ -579,6 +579,27 @@ def main() -> int:
 
     updated_flights.sort(key=lambda flight: flight["price"], reverse=True)
     updated_unavailable = [destination for destination in DESTINATIONS if destination in updated_unavailable]
+    report["completeCoverage"] = (
+        report["sourceError"] == 0
+        and report["queryError"] == 0
+        and report["parseError"] == 0
+    )
+    report["published"] = report["completeCoverage"]
+    report["qualified"] = len(updated_flights)
+    report["unavailable"] = len(updated_unavailable)
+    report["currentPreferred"] = min(
+        updated_flights, key=lambda flight: flight["price"], default=None
+    )
+    if not report["completeCoverage"]:
+        (run_dir / "summary.json").write_text(
+            json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        (TRACKING_ROOT / "latest.json").write_text(
+            json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0
+
     price_history = append_price_history(
         load_price_history(), updated_flights, report["updatedAt"]
     )
@@ -595,11 +616,6 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    report["qualified"] = len(updated_flights)
-    report["unavailable"] = len(updated_unavailable)
-    report["currentPreferred"] = min(
-        updated_flights, key=lambda flight: flight["price"], default=None
-    )
     (run_dir / "summary.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
     )
