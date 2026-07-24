@@ -96,6 +96,12 @@
       "price": 18066,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 15032,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "赫尔辛基": [
@@ -193,6 +199,12 @@
     {
       "updatedAt": "2026-07-23 11:02",
       "price": 16988,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 18084,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -343,6 +355,12 @@
       "price": 15409,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 19893,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "墨尔本": [
@@ -434,6 +452,12 @@
       "price": 14196,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 12331,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "第比利斯": [
@@ -522,6 +546,12 @@
       "price": 13310,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 13519,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "布达佩斯": [
@@ -583,6 +613,12 @@
       "price": 12959,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 12959,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "伦敦": [
@@ -623,6 +659,12 @@
       "updatedAt": "2026-07-23 11:02",
       "price": 10444,
       "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 10444,
+      "stale": true,
       "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
@@ -765,6 +807,12 @@
     },
     {
       "updatedAt": "2026-07-23 11:02",
+      "price": 10959,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
       "price": 10959,
       "stale": true,
       "criteriaVersion": "17h-one-stop-price-first"
@@ -993,6 +1041,12 @@
       "price": 6467,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 6467,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "开罗": [
@@ -1016,6 +1070,12 @@
       "updatedAt": "2026-07-23 11:02",
       "price": 19708,
       "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 19708,
+      "stale": true,
       "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
@@ -1084,6 +1144,12 @@
       "updatedAt": "2026-07-23 11:02",
       "price": 14985,
       "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-24 09:24",
+      "price": 14985,
+      "stale": true,
       "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
