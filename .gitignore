@@ -1,3 +1,4 @@
 .tracking/
+.flight-dependencies/
 __pycache__/
 *.pyc

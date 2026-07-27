@@ -77,6 +77,12 @@
       "price": 19191,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 23645,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "埃里温": [
@@ -195,6 +201,12 @@
       "price": 16988,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 16988,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "亚的斯亚贝巴": [
@@ -243,6 +255,12 @@
     {
       "updatedAt": "2026-07-23 11:02",
       "price": 15588,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 18048,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -343,6 +361,12 @@
       "price": 15409,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 7637,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "墨尔本": [
@@ -367,6 +391,12 @@
       "updatedAt": "2026-07-20 09:00",
       "price": 13874,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 10544,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "巴黎": [
@@ -434,6 +464,12 @@
       "price": 14196,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 14196,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "第比利斯": [
@@ -465,6 +501,12 @@
     {
       "updatedAt": "2026-07-23 09:51",
       "price": 14812,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 20726,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -520,6 +562,12 @@
     {
       "updatedAt": "2026-07-23 11:02",
       "price": 13310,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 12746,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -583,6 +631,12 @@
       "price": 12959,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 21262,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "伦敦": [
@@ -624,6 +678,12 @@
       "price": 10444,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 10444,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "慕尼黑": [
@@ -655,6 +715,12 @@
     {
       "updatedAt": "2026-07-21 16:32",
       "price": 14806,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 15950,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -768,6 +834,12 @@
       "price": 10959,
       "stale": true,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 10959,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "加德满都": [
@@ -842,6 +914,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 8472,
       "stale": true
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 10131,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "基督城": [
@@ -912,6 +990,12 @@
     {
       "updatedAt": "2026-07-22 17:30",
       "price": 13219,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 15092,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -993,6 +1077,12 @@
       "price": 6467,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 7637,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "开罗": [
@@ -1015,6 +1105,12 @@
     {
       "updatedAt": "2026-07-23 11:02",
       "price": 19708,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 16737,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }
@@ -1085,6 +1181,12 @@
       "price": 14985,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 14985,
+      "stale": true,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "伊斯坦布尔": [
@@ -1148,6 +1250,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 5781,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 19507,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "哥本哈根": [
@@ -1155,6 +1263,12 @@
       "updatedAt": "2026-07-21 12:15",
       "price": 13859,
       "stale": false
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 22866,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
     }
   ],
   "布拉格": [
@@ -1166,6 +1280,36 @@
     {
       "updatedAt": "2026-07-22 17:30",
       "price": 13950,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    },
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 15803,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    }
+  ],
+  "阿德莱德": [
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 39787,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    }
+  ],
+  "内罗毕": [
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 31633,
+      "stale": false,
+      "criteriaVersion": "17h-one-stop-price-first"
+    }
+  ],
+  "悉尼": [
+    {
+      "updatedAt": "2026-07-27 11:59",
+      "price": 12490,
       "stale": false,
       "criteriaVersion": "17h-one-stop-price-first"
     }

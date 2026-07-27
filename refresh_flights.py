@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import argparse
 import json
 import hashlib
+import os
 import re
 import subprocess
 import sys
-import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
@@ -18,13 +19,18 @@ PAGE_PATH = ROOT / "index.html"
 HISTORY_PATH = ROOT / "price_history.json"
 TRACKING_ROOT = ROOT / ".tracking"
 FLYCLAW_PATH = Path("/Users/zhourongbing/.agents/skills/flyclaw/flyclaw.py")
+GOOGLE_QUERY_PATH = ROOT / "google_flights_query.py"
+GOOGLE_DEPENDENCY_PATH = ROOT / ".flight-dependencies"
+GOOGLE_REQUIREMENTS_PATH = ROOT / "requirements-flight-radar.txt"
 DEPARTURE_DATE = "2026-09-25"
 RETURN_DATE = "2026-10-07"
 MAX_DURATION_MINUTES = 17 * 60
 MAX_STOPS_PER_DIRECTION = 1
 CRITERIA_VERSION = "17h-one-stop-price-first"
 MAX_WORKERS = 2
-QUERY_TIMEOUT_SECONDS = 35
+QUERY_TIMEOUT_SECONDS = 60
+GOOGLE_TOP_N = 8
+MIN_CURRENT_COVERAGE_RATIO = 0.4
 
 DESTINATIONS = {
     "雷克雅未克（冰岛）": "欧洲",
@@ -83,6 +89,56 @@ DESTINATION_QUERIES = {
     "马累（马尔代夫）": "马累",
 }
 
+DESTINATION_AIRPORTS = {
+    "雷克雅未克（冰岛）": "KEF",
+    "卡萨布兰卡": "CMN",
+    "巴塞罗那": "BCN",
+    "埃里温": "EVN",
+    "赫尔辛基": "HEL",
+    "奥克兰": "AKL",
+    "亚的斯亚贝巴": "ADD",
+    "马德里": "MAD",
+    "旧金山": "SFO",
+    "墨尔本": "MEL",
+    "珀斯": "PER",
+    "巴黎": "CDG,ORY",
+    "第比利斯": "TBS",
+    "阿姆斯特丹": "AMS",
+    "布达佩斯": "BUD",
+    "伦敦": "LHR,LGW",
+    "慕尼黑": "MUC",
+    "温哥华": "YVR",
+    "约翰内斯堡": "JNB",
+    "维也纳": "VIE",
+    "加德满都": "KTM",
+    "洛杉矶": "LAX",
+    "伊斯坦布尔": "IST",
+    "内罗毕": "NBO",
+    "哥本哈根": "CPH",
+    "圣保罗": "GRU",
+    "基督城": "CHC",
+    "墨西哥城": "MEX",
+    "多伦多": "YYZ",
+    "布拉格": "PRG",
+    "布里斯班": "BNE",
+    "开普敦": "CPT",
+    "开罗": "CAI",
+    "悉尼": "SYD",
+    "波士顿": "BOS",
+    "纽约": "JFK,EWR",
+    "罗马": "FCO",
+    "芝加哥": "ORD",
+    "苏黎世": "ZRH",
+    "西雅图": "SEA",
+    "里斯本": "LIS",
+    "阿德莱德": "ADL",
+    "雅典": "ATH",
+    "马斯喀特": "MCT",
+    "德班（南非）": "DUR",
+    "毛里求斯": "MRU",
+    "马累（马尔代夫）": "MLE",
+}
+
 AIRPORT_NAMES = {
     "ADD": "亚的斯亚贝巴",
     "BKK": "曼谷",
@@ -115,7 +171,11 @@ AIRPORT_NAMES = {
 
 def read_current_data(page_text: str) -> tuple[list[dict], list[str]]:
     flights_match = re.search(r"const flights=(.*?);\s*const unavailable=", page_text, re.S)
-    unavailable_match = re.search(r"const unavailable=(.*?);\s*const updatedAt=", page_text, re.S)
+    unavailable_match = re.search(
+        r"const unavailable=(.*?);\s*(?:const coverageSummary=.*?;\s*)?const updatedAt=",
+        page_text,
+        re.S,
+    )
     if not flights_match or not unavailable_match:
         raise RuntimeError("Unable to locate current flight data")
     script = (
@@ -186,9 +246,75 @@ def parse_json_output(output: str) -> list[dict]:
     return data
 
 
-def query_destination(destination: str, run_dir: Path) -> dict:
+def google_environment() -> dict[str, str]:
+    environment = os.environ.copy()
+    current_path = environment.get("PYTHONPATH", "")
+    paths = [str(GOOGLE_DEPENDENCY_PATH)]
+    if current_path:
+        paths.append(current_path)
+    environment["PYTHONPATH"] = os.pathsep.join(paths)
+    return environment
+
+
+def verify_google_dependencies() -> bool:
+    process = subprocess.run(
+        [sys.executable, "-c", "from fli.search import SearchFlights"],
+        text=True,
+        capture_output=True,
+        timeout=20,
+        check=False,
+        env=google_environment(),
+    )
+    return process.returncode == 0
+
+
+def ensure_google_dependencies() -> bool:
+    if verify_google_dependencies():
+        return True
+    GOOGLE_DEPENDENCY_PATH.mkdir(parents=True, exist_ok=True)
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "--target",
+            str(GOOGLE_DEPENDENCY_PATH),
+            "--requirement",
+            str(GOOGLE_REQUIREMENTS_PATH),
+        ],
+        text=True,
+        capture_output=True,
+        timeout=240,
+        check=False,
+    )
+    return process.returncode == 0 and verify_google_dependencies()
+
+
+def google_command(destination: str) -> list[str]:
+    return [
+        sys.executable,
+        str(GOOGLE_QUERY_PATH),
+        "--from-airports",
+        "PVG,SHA",
+        "--to-airports",
+        DESTINATION_AIRPORTS[destination],
+        "--departure-date",
+        DEPARTURE_DATE,
+        "--return-date",
+        RETURN_DATE,
+        "--max-duration-minutes",
+        str(MAX_DURATION_MINUTES),
+        "--max-stops",
+        str(MAX_STOPS_PER_DIRECTION),
+        "--top-n",
+        str(GOOGLE_TOP_N),
+    ]
+
+
+def flyclaw_command(destination: str) -> list[str]:
     query = DESTINATION_QUERIES.get(destination, destination)
-    command = [
+    return [
         sys.executable,
         str(FLYCLAW_PATH),
         "search",
@@ -213,67 +339,117 @@ def query_destination(destination: str, run_dir: Path) -> dict:
         "--limit",
         "20",
     ]
-    last_result: dict | None = None
-    for attempt in range(2):
+
+
+def run_query_command(
+    destination: str,
+    source: str,
+    command: list[str],
+    environment: dict[str, str] | None = None,
+) -> dict:
+    try:
+        process = subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            timeout=QUERY_TIMEOUT_SECONDS,
+            check=False,
+            env=environment,
+        )
+        result = {
+            "destination": destination,
+            "source": source,
+            "returncode": process.returncode,
+            "stdout": process.stdout,
+            "stderr": process.stderr,
+        }
+        if process.returncode != 0:
+            result["status"] = "query_error"
+            result["error"] = f"Exit code {process.returncode}"
+            return result
         try:
-            process = subprocess.run(
-                command,
-                text=True,
-                capture_output=True,
-                timeout=QUERY_TIMEOUT_SECONDS,
-                check=False,
+            result["records"] = parse_json_output(process.stdout)
+        except (json.JSONDecodeError, ValueError) as error:
+            result["status"] = "parse_error"
+            result["error"] = str(error)
+            return result
+        source_errors = [
+            marker
+            for marker in (
+                "Fliggy MCP query failed",
+                "Skiplagged returned HTTP",
+                "Google Flights query failed",
+                "Google Flights search failed",
             )
-            result = {
-                "destination": destination,
-                "attempt": attempt + 1,
-                "returncode": process.returncode,
-                "stdout": process.stdout,
-                "stderr": process.stderr,
-            }
-            last_result = result
-            if process.returncode == 0:
-                try:
-                    result["records"] = parse_json_output(process.stdout)
-                    source_errors = [
-                        marker
-                        for marker in (
-                            "Fliggy MCP query failed",
-                            "Skiplagged returned HTTP",
-                            "Google Flights query failed",
-                            "Google Flights search failed",
-                        )
-                        if marker in process.stderr
-                    ]
-                    if not result["records"] and source_errors:
-                        result["status"] = "source_error"
-                        result["error"] = "No records with upstream errors: " + ", ".join(source_errors)
-                    else:
-                        result["status"] = "success"
-                        break
-                except (json.JSONDecodeError, ValueError) as error:
-                    result["status"] = "parse_error"
-                    result["error"] = str(error)
-            else:
-                result["status"] = "query_error"
-                result["error"] = f"Exit code {process.returncode}"
-        except subprocess.TimeoutExpired as error:
-            last_result = {
-                "destination": destination,
-                "attempt": attempt + 1,
-                "status": "query_error",
-                "error": f"Timeout after {QUERY_TIMEOUT_SECONDS} seconds",
-                "stdout": error.stdout or "",
-                "stderr": error.stderr or "",
-            }
-        if attempt == 0:
-            time.sleep(3)
-    if last_result is None:
-        raise RuntimeError("Query did not produce a result")
+            if marker in process.stderr
+        ]
+        if not result["records"] and source_errors:
+            result["status"] = "source_error"
+            result["error"] = "No records with upstream errors: " + ", ".join(source_errors)
+        else:
+            result["status"] = "success"
+        return result
+    except subprocess.TimeoutExpired as error:
+        return {
+            "destination": destination,
+            "source": source,
+            "status": "query_error",
+            "error": f"Timeout after {QUERY_TIMEOUT_SECONDS} seconds",
+            "stdout": error.stdout or "",
+            "stderr": error.stderr or "",
+        }
+
+
+def query_destination(
+    destination: str, run_dir: Path, google_ready: bool
+) -> dict:
+    attempts = []
+    if google_ready:
+        google_result = run_query_command(
+            destination,
+            "google_flights",
+            google_command(destination),
+            google_environment(),
+        )
+        attempts.append(google_result)
+        if google_result.get("status") == "success":
+            final_result = dict(google_result)
+        else:
+            fallback_result = run_query_command(
+                destination,
+                "flyclaw",
+                flyclaw_command(destination),
+            )
+            attempts.append(fallback_result)
+            final_result = dict(fallback_result)
+    else:
+        fallback_result = run_query_command(
+            destination,
+            "flyclaw",
+            flyclaw_command(destination),
+        )
+        attempts.append(fallback_result)
+        final_result = dict(fallback_result)
+    final_result["attempts"] = attempts
     safe_name = hashlib.sha1(destination.encode("utf-8")).hexdigest()[:12]
     (run_dir / f"{safe_name}.json").write_text(
-        json.dumps(last_result, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(final_result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    return last_result
+    return final_result
+
+
+def load_run_results(run_dir: Path) -> dict[str, dict]:
+    results = {}
+    for destination in DESTINATIONS:
+        safe_name = hashlib.sha1(destination.encode("utf-8")).hexdigest()[:12]
+        path = run_dir / f"{safe_name}.json"
+        if not path.exists():
+            raise RuntimeError(f"Missing cached result for {destination}")
+        result = json.loads(path.read_text(encoding="utf-8"))
+        if result.get("destination") != destination:
+            raise RuntimeError(f"Cached destination mismatch for {destination}")
+        results[destination] = result
+    return results
 
 
 def itinerary_key(record: dict) -> tuple:
@@ -320,6 +496,32 @@ def qualifying_records(records: list[dict]) -> list[dict]:
         median_price = median(float(record["price"]) for record in qualified)
         qualified = [record for record in qualified if float(record["price"]) <= median_price * 3]
     return sorted(qualified, key=itinerary_key)
+
+
+def has_unpriced_qualifying_itinerary(records: list[dict]) -> bool:
+    for record in records:
+        required_route_fields = [
+            record.get("stops"),
+            record.get("return_stops"),
+            record.get("duration_minutes"),
+            record.get("return_duration_minutes"),
+        ]
+        if any(value is None for value in required_route_fields):
+            continue
+        cabin_class = str(record.get("cabin_class") or "").lower()
+        if cabin_class and cabin_class not in {"经济舱", "economy"}:
+            continue
+        if int(record["duration_minutes"]) > MAX_DURATION_MINUTES:
+            continue
+        if int(record["return_duration_minutes"]) > MAX_DURATION_MINUTES:
+            continue
+        if int(record["stops"]) > MAX_STOPS_PER_DIRECTION:
+            continue
+        if int(record["return_stops"]) > MAX_STOPS_PER_DIRECTION:
+            continue
+        if record.get("price") is None or record.get("currency") is None:
+            return True
+    return False
 
 
 def format_duration(minutes: int) -> str:
@@ -432,7 +634,11 @@ def validate_page(page_text: str) -> None:
     )
     if process.returncode != 0:
         raise RuntimeError(process.stderr.strip() or "Inline script syntax check failed")
-    if "较上次" not in page_text or "updatedAt" not in page_text:
+    if (
+        "较上次" not in page_text
+        or "updatedAt" not in page_text
+        or "coverageSummary" not in page_text
+    ):
         raise RuntimeError("Tracking display is missing")
 
 
@@ -441,6 +647,7 @@ def update_page(
     flights: list[dict],
     unavailable: list[str],
     updated_at: str,
+    coverage_summary: dict,
     price_history: dict[str, list[dict]] | None = None,
 ) -> str:
     data_block = (
@@ -448,10 +655,12 @@ def update_page(
         + json.dumps(flights, ensure_ascii=False, separators=(",", ":"))
         + ";\n    const unavailable="
         + json.dumps(unavailable, ensure_ascii=False, separators=(",", ":"))
+        + ";\n    const coverageSummary="
+        + json.dumps(coverage_summary, ensure_ascii=False, separators=(",", ":"))
         + ";"
     )
     updated = re.sub(
-        r"const flights=.*?;\s*const unavailable=.*?;",
+        r"const flights=.*?;\s*const unavailable=.*?;(?:\s*const coverageSummary=.*?;)?",
         data_block,
         page_text,
         count=1,
@@ -481,30 +690,48 @@ def update_page(
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--reuse-run", type=Path)
+    args = parser.parse_args()
     page_text = PAGE_PATH.read_text(encoding="utf-8")
-    current_flights, current_unavailable = read_current_data(page_text)
+    current_flights, _ = read_current_data(page_text)
     current_by_destination = {flight["destination"]: flight for flight in current_flights}
-    run_time = datetime.now(ZoneInfo("Asia/Shanghai"))
-    run_id = run_time.strftime("%Y%m%d-%H%M%S")
-    run_dir = TRACKING_ROOT / run_id
-    run_dir.mkdir(parents=True, exist_ok=True)
-
-    results = {}
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = {
-            executor.submit(query_destination, destination, run_dir): destination
-            for destination in DESTINATIONS
-        }
-        for future in as_completed(futures):
-            destination = futures[future]
-            try:
-                results[destination] = future.result()
-            except Exception as error:
-                results[destination] = {
-                    "destination": destination,
-                    "status": "query_error",
-                    "error": str(error),
-                }
+    if args.reuse_run:
+        run_dir = args.reuse_run.resolve()
+        cached_summary = json.loads(
+            (run_dir / "summary.json").read_text(encoding="utf-8")
+        )
+        run_time = datetime.strptime(
+            cached_summary["updatedAt"], "%Y-%m-%d %H:%M"
+        ).replace(tzinfo=ZoneInfo("Asia/Shanghai"))
+        google_ready = bool(
+            cached_summary.get("sources", {}).get("googleFlightsReady")
+        )
+        results = load_run_results(run_dir)
+    else:
+        run_time = datetime.now(ZoneInfo("Asia/Shanghai"))
+        run_id = run_time.strftime("%Y%m%d-%H%M%S")
+        run_dir = TRACKING_ROOT / run_id
+        run_dir.mkdir(parents=True, exist_ok=True)
+        google_ready = ensure_google_dependencies()
+        results = {}
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            futures = {
+                executor.submit(
+                    query_destination, destination, run_dir, google_ready
+                ): destination
+                for destination in DESTINATIONS
+            }
+            for future in as_completed(futures):
+                destination = futures[future]
+                try:
+                    results[destination] = future.result()
+                except Exception as error:
+                    results[destination] = {
+                        "destination": destination,
+                        "status": "query_error",
+                        "error": str(error),
+                    }
 
     updated_flights = []
     updated_unavailable = []
@@ -515,6 +742,7 @@ def main() -> int:
         "queryError": 0,
         "parseError": 0,
         "noResult": 0,
+        "missingPrice": 0,
         "changes": [],
         "newlyQualified": [],
         "newlyUnavailable": [],
@@ -525,6 +753,12 @@ def main() -> int:
             "maxStopsPerDirection": MAX_STOPS_PER_DIRECTION,
             "ranking": "price_first",
         },
+        "sources": {
+            "googleFlightsReady": google_ready,
+            "primary": "google_flights",
+            "fallback": "flyclaw",
+        },
+        "reusedRun": bool(args.reuse_run),
     }
 
     for destination in DESTINATIONS:
@@ -550,8 +784,19 @@ def main() -> int:
             continue
 
         report["success"] += 1
-        qualified = qualifying_records(result.get("records") or [])
+        records = result.get("records") or []
+        qualified = qualifying_records(records)
         if not qualified:
+            if has_unpriced_qualifying_itinerary(records):
+                report["missingPrice"] += 1
+                if previous and stored_flight_qualifies(previous):
+                    preserved = dict(previous)
+                    preserved["stale"] = True
+                    updated_flights.append(preserved)
+                else:
+                    updated_unavailable.append(destination)
+                report["preserved"].append(destination)
+                continue
             report["noResult"] += 1
             updated_unavailable.append(destination)
             if previous:
@@ -584,13 +829,18 @@ def main() -> int:
         and report["queryError"] == 0
         and report["parseError"] == 0
     )
-    report["published"] = report["completeCoverage"]
+    report["currentCoverageRatio"] = report["success"] / len(DESTINATIONS)
+    report["publishableCoverage"] = (
+        report["currentCoverageRatio"] >= MIN_CURRENT_COVERAGE_RATIO
+        and report["parseError"] == 0
+    )
+    report["published"] = report["publishableCoverage"]
     report["qualified"] = len(updated_flights)
     report["unavailable"] = len(updated_unavailable)
     report["currentPreferred"] = min(
         updated_flights, key=lambda flight: flight["price"], default=None
     )
-    if not report["completeCoverage"]:
+    if not report["published"]:
         (run_dir / "summary.json").write_text(
             json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
         )
@@ -608,6 +858,15 @@ def main() -> int:
         updated_flights,
         updated_unavailable,
         report["updatedAt"],
+        {
+            "current": report["success"] - report["missingPrice"],
+            "total": len(DESTINATIONS),
+            "preserved": (
+                len(DESTINATIONS)
+                - report["success"]
+                + report["missingPrice"]
+            ),
+        },
         price_history,
     )
     PAGE_PATH.write_text(updated_page, encoding="utf-8")
