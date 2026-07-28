@@ -30,7 +30,6 @@ CRITERIA_VERSION = "17h-one-stop-price-first"
 MAX_WORKERS = 2
 QUERY_TIMEOUT_SECONDS = 60
 GOOGLE_TOP_N = 8
-MIN_CURRENT_COVERAGE_RATIO = 0.4
 
 DESTINATIONS = {
     "雷克雅未克（冰岛）": "欧洲",
@@ -830,10 +829,7 @@ def main() -> int:
         and report["parseError"] == 0
     )
     report["currentCoverageRatio"] = report["success"] / len(DESTINATIONS)
-    report["publishableCoverage"] = (
-        report["currentCoverageRatio"] >= MIN_CURRENT_COVERAGE_RATIO
-        and report["parseError"] == 0
-    )
+    report["publishableCoverage"] = report["completeCoverage"]
     report["published"] = report["publishableCoverage"]
     report["qualified"] = len(updated_flights)
     report["unavailable"] = len(updated_unavailable)
