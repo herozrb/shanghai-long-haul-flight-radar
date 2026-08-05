@@ -208,29 +208,47 @@ def load_price_history() -> dict[str, list[dict]]:
 
 
 def append_price_history(
-    history: dict[str, list[dict]], flights: list[dict], updated_at: str
+    history: dict[str, list[dict]],
+    flights: list[dict],
+    unavailable: list[str],
+    updated_at: str,
 ) -> dict[str, list[dict]]:
     updated_history = {
         destination: list(points)
         for destination, points in history.items()
         if isinstance(points, list)
     }
-    for flight in flights:
-        destination = flight["destination"]
+    flights_by_destination = {flight["destination"]: flight for flight in flights}
+    for destination in DESTINATIONS:
+        flight = flights_by_destination.get(destination)
+        previous_points = [
+            point
+            for point in updated_history.get(destination, [])
+            if point.get("updatedAt") != updated_at
+        ]
+        previous_price = next(
+            (
+                point.get("price")
+                for point in reversed(previous_points)
+                if isinstance(point.get("price"), int)
+            ),
+            None,
+        )
         point = {
             "updatedAt": updated_at,
-            "price": int(flight["price"]),
-            "stale": bool(flight.get("stale")),
-            "criteriaVersion": flight.get("criteriaVersion", CRITERIA_VERSION),
+            "price": int(flight["price"]) if flight else None,
+            "previousPrice": previous_price,
+            "status": "qualified" if flight else "unavailable",
+            "stale": bool(flight and flight.get("stale")),
+            "criteriaVersion": (
+                flight.get("criteriaVersion", CRITERIA_VERSION)
+                if flight
+                else CRITERIA_VERSION
+            ),
         }
-        points = [
-            existing
-            for existing in updated_history.get(destination, [])
-            if existing.get("updatedAt") != updated_at
-        ]
-        points.append(point)
-        points.sort(key=lambda item: item["updatedAt"])
-        updated_history[destination] = points[-365:]
+        previous_points.append(point)
+        previous_points.sort(key=lambda item: item["updatedAt"])
+        updated_history[destination] = previous_points[-365:]
     return updated_history
 
 
@@ -693,9 +711,15 @@ def main() -> int:
     parser.add_argument("--reuse-run", type=Path)
     args = parser.parse_args()
     page_text = PAGE_PATH.read_text(encoding="utf-8")
-    current_flights, _ = read_current_data(page_text)
-    current_by_destination = {flight["destination"]: flight for flight in current_flights}
     if args.reuse_run:
+        baseline_page_text = subprocess.run(
+            ["git", "show", "HEAD:index.html"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+        current_flights, _ = read_current_data(baseline_page_text)
         run_dir = args.reuse_run.resolve()
         cached_summary = json.loads(
             (run_dir / "summary.json").read_text(encoding="utf-8")
@@ -708,6 +732,7 @@ def main() -> int:
         )
         results = load_run_results(run_dir)
     else:
+        current_flights, _ = read_current_data(page_text)
         run_time = datetime.now(ZoneInfo("Asia/Shanghai"))
         run_id = run_time.strftime("%Y%m%d-%H%M%S")
         run_dir = TRACKING_ROOT / run_id
@@ -731,6 +756,8 @@ def main() -> int:
                         "status": "query_error",
                         "error": str(error),
                     }
+
+    current_by_destination = {flight["destination"]: flight for flight in current_flights}
 
     updated_flights = []
     updated_unavailable = []
@@ -847,7 +874,10 @@ def main() -> int:
         return 0
 
     price_history = append_price_history(
-        load_price_history(), updated_flights, report["updatedAt"]
+        load_price_history(),
+        updated_flights,
+        updated_unavailable,
+        report["updatedAt"],
     )
     updated_page = update_page(
         page_text,
